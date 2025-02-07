@@ -72,8 +72,8 @@ const RecipeInputStep = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-white p-6">
-      <Card className="max-w-4xl mx-auto p-6">
+    <div className="w-full min-h-screen bg-background p-6 flex">
+      <Card className="max-w-4xl mx-auto p-6 grow">
         <h2 className="text-3xl font-semibold mb-6">Recipe Details</h2>
 
         {/* Photo Upload Section */}

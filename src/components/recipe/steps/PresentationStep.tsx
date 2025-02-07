@@ -3,7 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Upload, Wand2 } from "lucide-react";
 
 interface PresentationStepProps {
@@ -47,50 +46,35 @@ const PresentationStep = ({
         Final Dish Presentation
       </h2>
 
-      <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-8">
-          <TabsTrigger value="upload" className="flex items-center gap-2">
-            <Upload className="w-4 h-4" />
-            Upload Photo
-          </TabsTrigger>
-          <TabsTrigger value="ai" className="flex items-center gap-2">
-            <Wand2 className="w-4 h-4" />
-            AI Generate
-          </TabsTrigger>
-        </TabsList>
+      <Card className="p-6">
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <Label htmlFor="photo-upload">
+              Upload a photo of your finished dish (optional)
+            </Label>
+            <Input
+              id="photo-upload"
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoUpload}
+              className="mb-4"
+            />
+          </div>
 
-        <TabsContent value="upload">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <Label htmlFor="photo-upload">
-                Upload a photo of your finished dish
-              </Label>
-              <Input
-                id="photo-upload"
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoUpload}
-                className="mb-4"
-              />
-            </div>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="ai">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <Label>Generate an AI representation of your dish</Label>
-              <Button
-                onClick={handleAIGenerate}
-                disabled={loading}
-                className="w-full"
-              >
-                {loading ? "Generating..." : "Generate Image"}
-              </Button>
-            </div>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          <div className="space-y-4">
+            <Label>Or generate an AI representation</Label>
+            <Button
+              onClick={handleAIGenerate}
+              disabled={loading}
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+            >
+              <Wand2 className="w-4 h-4" />
+              {loading ? "Generating..." : "Generate with AI"}
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {photo && (
         <div className="mt-8">
@@ -109,9 +93,7 @@ const PresentationStep = ({
         <Button variant="outline" onClick={onBack}>
           Back
         </Button>
-        <Button onClick={onNext} disabled={!photo}>
-          Next
-        </Button>
+        <Button onClick={onNext}>Next</Button>
       </div>
     </div>
   );

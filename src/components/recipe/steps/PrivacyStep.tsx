@@ -36,14 +36,11 @@ const PrivacyStep = ({
   return (
     <div className="w-full min-h-[500px] bg-background p-6 space-y-8">
       <div className="space-y-4">
-        <h2 className="text-3xl font-semibold text-primary">
-          Privacy Settings
-        </h2>
+        <h2 className="text-3xl font-semibold text-primary">Sharing Options</h2>
         <p className="text-muted-foreground text-lg">
           Choose how you want to share your cherished recipe
         </p>
       </div>
-
       <Card className="p-6 space-y-6">
         <div className="space-y-4">
           <h3 className="text-xl font-medium">Sharing Level</h3>
@@ -123,7 +120,6 @@ const PrivacyStep = ({
           )}
         </div>
       </Card>
-
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={onBack}>
           Back
