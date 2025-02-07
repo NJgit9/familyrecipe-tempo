@@ -55,9 +55,15 @@ const PrivacyStep = ({
               <Label htmlFor="private">Private - Only visible to me</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="family" id="family" />
-              <Label htmlFor="family">
-                Family and Friends - Shared with select family and friends
+              <RadioGroupItem value="select-family" id="select-family" />
+              <Label htmlFor="select-family">
+                Select Family and Friends - Share with specific people
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="all-family" id="all-family" />
+              <Label htmlFor="all-family">
+                All Family and Friends - Share with everyone in your family code
               </Label>
             </div>
             <div className="flex items-center space-x-2">

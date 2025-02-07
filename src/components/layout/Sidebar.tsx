@@ -68,15 +68,9 @@ const Sidebar = () => {
               className="w-full justify-start pl-8 text-lg py-4"
               onClick={() => navigate("/recipe/privacy")}
             >
-              Privacy Settings
+              Sharing Options
             </Button>
-            <Button
-              variant="ghost"
-              className="w-full justify-start pl-8 text-lg py-4"
-              onClick={() => navigate("/recipe/recipients")}
-            >
-              Recipients
-            </Button>
+
             <Button
               variant="ghost"
               className="w-full justify-start pl-8 text-lg py-4"

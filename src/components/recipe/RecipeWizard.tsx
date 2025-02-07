@@ -8,9 +8,47 @@ import PrivacyStep from "./steps/PrivacyStep";
 import RecipientsStep from "./steps/RecipientsStep";
 import ReviewStep from "./steps/ReviewStep";
 
+type PrivacyLevel = "private" | "select-family" | "all-family" | "public";
+type DistributionType = "immediate" | "scheduled" | "posthumous";
+
+interface RecipeFormData {
+  recipeInput: {
+    photos: string[];
+    ingredients: string[];
+    directions: string[];
+    voiceRecordings: string[];
+  };
+  story: {
+    storyText: string;
+    memoryPhotos: string[];
+    voiceRecordings: string[];
+  };
+  presentation: {
+    photo: string;
+  };
+  privacy: {
+    privacyLevel: PrivacyLevel;
+    distributionType: DistributionType;
+    scheduledDate?: Date;
+  };
+  recipients?: {
+    recipients: Array<{
+      id: string;
+      type: "individual" | "family";
+      name: string;
+      email?: string;
+      phone?: string;
+      address?: string;
+      message?: string;
+      photos?: string[];
+      voiceRecording?: string;
+    }>;
+  };
+}
+
 interface RecipeWizardProps {
-  onComplete?: (data: any) => void;
-  initialData?: any;
+  onComplete?: (data: RecipeFormData) => void;
+  initialData?: Partial<RecipeFormData>;
 }
 
 const RecipeWizard = ({
@@ -18,7 +56,7 @@ const RecipeWizard = ({
   initialData = {},
 }: RecipeWizardProps) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RecipeFormData>({
     recipeInput: {
       photos: [],
       ingredients: [],
@@ -82,48 +120,55 @@ const RecipeWizard = ({
         },
       },
       {
-        title: "Privacy Settings",
+        title: "Sharing Options",
         component: PrivacyStep,
         props: {
           ...formData.privacy,
           onNext: (data: any) => {
             setFormData({ ...formData, privacy: data });
-            setCurrentStep(4);
+            // If select-family is chosen, go to recipients step, otherwise go to review
+            setCurrentStep(data.privacyLevel === "select-family" ? 4 : 5);
           },
           onBack: () => setCurrentStep(2),
         },
       },
-      {
-        title: "Review",
-        component: ReviewStep,
-        props: {
-          recipeData: {
-            ...formData.recipeInput,
-            ...formData.story,
-            ...formData.presentation,
-            ...formData.privacy,
-          },
-          onConfirm: () => onComplete(formData),
-          onBack: () => setCurrentStep(3),
-        },
-      },
     ];
 
-    // Insert Recipients step before Review if privacy level is family
-    if (formData.privacy.privacyLevel === "family") {
-      baseSteps.splice(baseSteps.length - 1, 0, {
+    // Add Recipients step if privacy level is select-family
+    if (formData.privacy.privacyLevel === "select-family") {
+      baseSteps.push({
         title: "Recipients",
         component: RecipientsStep,
         props: {
           initialData: formData.recipients,
           onNext: (data: any) => {
             setFormData({ ...formData, recipients: data });
-            setCurrentStep(currentStep + 1);
+            setCurrentStep(5);
           },
-          onBack: () => setCurrentStep(currentStep - 1),
+          onBack: () => setCurrentStep(3),
         },
       });
     }
+
+    // Always add Review as the final step
+    baseSteps.push({
+      title: "Review",
+      component: ReviewStep,
+      props: {
+        recipeData: {
+          ...formData.recipeInput,
+          ...formData.story,
+          ...formData.presentation,
+          ...formData.privacy,
+          ...(formData.recipients && { recipients: formData.recipients }),
+        },
+        onConfirm: () => onComplete(formData),
+        onBack: () =>
+          setCurrentStep(
+            formData.privacy.privacyLevel === "select-family" ? 4 : 3,
+          ),
+      },
+    });
 
     return baseSteps;
   };
